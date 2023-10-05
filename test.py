@@ -17,16 +17,16 @@ def shouldOrderByRadixSortWithSuccess():
     
     #Arrange
     df = Event()
-    df.owner_id = ['12045', '18492', '09471', '83713', '17387']
+    df.owner_id = ['45145', '18492', '09471', '83713', '17387']
     n = len(df.owner_id)
-    k = 10 #0 to 9
+    k = 10
     w = 5
 
     #Act
-    sorted = radix_sort(df.owner_id, n, w, k)
+    sorted_list = radix_sort(df.owner_id, n, w, k)
 
     #Assert
-    print(sorted)
+    print(sorted_list)
     print(calculateTime(startTime))    
 
 def shouldOrderByHeapSortWithSuccess():
@@ -47,4 +47,5 @@ def shouldOrderByHeapSortWithSuccess():
 
 #Running tests
 #shouldOrderByRadixSortWithSuccess()
+shouldOrderByRadixSortWithSuccess()
 shouldOrderByHeapSortWithSuccess()

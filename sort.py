@@ -21,9 +21,8 @@ def radix_sort(arr, n: int, n_digitos: int, n_range_digitos: int):
 
         for elemento in arr:
             j = int(elemento[digit]) #0 a 9
-            aux[contagem[j]-1] = elemento
-            contagem[j]+=1
-        
+            aux[contagem[j]-1]= elemento
+            contagem[j]-=1  
     return aux   
 
 #HEAPSORT
@@ -31,20 +30,20 @@ def heapify(arr, n: int, i: int):
     idx = i
     leftIdx = 2*i+1
     rightIdx = 2*i+2
-    if ((leftIdx<n) and (arr[leftIdx] > arr[idx])):
+    if ((leftIdx<n) and (int(arr[leftIdx]) > int(arr[idx]))):
         idx = leftIdx
-    if ((rightIdx<n) and (arr[rightIdx] > arr[idx])):
+    if ((rightIdx<n) and (int(arr[rightIdx]) > int(arr[idx]))):
         idx = rightIdx 
     if (idx != i):
         swap(arr, i, idx)
         heapify(arr, n, idx)       
     
 def buildHeap(arr, n: int):
-    for i in range(int(n/2 -1), 0, -1):
+    for i in range(int(n/2)-1, 0, -1):
         heapify(arr, n, i)
 
 def heapsort(arr, n:int):
     buildHeap(arr, n) 
-    for i in range(n-1, 1, -1):
+    for i in range(n-1, 0, -1):
         swap(arr, 0, i)
         heapify(arr, i, 0)    
