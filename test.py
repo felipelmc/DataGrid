@@ -1,51 +1,79 @@
 from datagrid import Event
 import time
-from sort import radix_sort, heapsort
+import random
+from sort import radix_sort, heapsort, mergesort, quicksort
 
 def calculateTime(startTime):
     total = time.time()-startTime
     print(f'The total time of this operation was: {total}')
 
-#def shouldReadCSVwithSuccess(file):
-#    startTime = time.time()
-#    df = Event()
-#    df.read_csv(file)
-#    calculateTime(startTime)
+def generateRandomNumberList(len, min_value, max_value):
+    random_list = []
+    for i in range(len):
+        random_list.append(random.randint(min_value, max_value))
+    return random_list    
 
 def shouldOrderByRadixSortWithSuccess():
     startTime = time.time()
     
     #Arrange
     df = Event()
-    df.owner_id = ['45145', '18492', '09471', '83713', '17387']
-    n = len(df.owner_id)
-    k = 10
-    w = 5
+    df.owner_id = generateRandomNumberList(1000, 100, 999)
+    to_assert = sorted(df.owner_id)
+    final = [str(number) for number in to_assert]
+    df.owner_id = [str(number) for number in df.owner_id]
 
     #Act
-    sorted_list = radix_sort(df.owner_id, n, w, k)
+    sorted_list = radix_sort(df.owner_id)
 
     #Assert
-    print(sorted_list)
-    print(calculateTime(startTime))    
+    #assert final==sorted_list
+    calculateTime(startTime)    
 
 def shouldOrderByHeapSortWithSuccess():
     startTime = time.time()
     
     #Arrange
     df = Event()
-    df.owner_id = ['12045', '18492', '09471', '83713', '17387']
-    n = len(df.owner_id)
+    df.owner_id = generateRandomNumberList(1000, 0, 999)
 
     #Act
-    heapsort(df.owner_id, n)
+    sorted_list = heapsort(df.owner_id)
 
     #Assert
-    print(df.owner_id)
-    print(calculateTime(startTime))        
+    assert sorted(df.owner_id)==sorted_list
+    calculateTime(startTime)        
 
+def shouldOrderByMergeSortWithSuccess():
+    startTime = time.time()
+    
+    #Arrange
+    df = Event()
+    df.owner_id = generateRandomNumberList(1000, 0, 999)
+
+    #Act
+    sorted_list = mergesort(df.owner_id)
+
+    #Assert
+    assert sorted(df.owner_id)==sorted_list
+    calculateTime(startTime)     
+
+def shouldOrderByQuickSortWithSuccess():
+    startTime = time.time()
+    
+    #Arrange
+    df = Event()
+    df.owner_id = generateRandomNumberList(1000, 0, 999)
+
+    #Act
+    sorted_list = quicksort(df.owner_id)
+
+    #Assert
+    assert sorted(df.owner_id)==sorted_list
+    calculateTime(startTime)      
 
 #Running tests
-#shouldOrderByRadixSortWithSuccess()
 shouldOrderByRadixSortWithSuccess()
 shouldOrderByHeapSortWithSuccess()
+shouldOrderByMergeSortWithSuccess()
+shouldOrderByQuickSortWithSuccess()
