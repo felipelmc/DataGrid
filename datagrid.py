@@ -1,4 +1,4 @@
-from sort import radix_sort
+from sort import radix_sort, heapsort, mergesort, quicksort
 from selection import searchBinaryTree
 from data_storage import HashTable
 import csv
@@ -17,6 +17,25 @@ class DataGrid:
     def __init__(self):
         pass
 
+    def _invert_order(arr):
+        n = len(arr)
+        return [arr[i] for i in range(n, -1, -1)]
+
+    def _preProcessingCreationDate(arr):
+        final = []
+        for element in arr:
+            element = element.replace("/", "")
+            element = element.replace(":", "")
+            element = element.replace(" ", "")
+            final.append(element)
+        return final
+
+    def _postProcessingCreationDate(arr):
+        final = []
+        for e in arr:
+            final_str = e[0:3]+"/"+e[4:5]+"/"+e[6:7]+" "+e[8:9]+":"+e[10:11]+":"+e[12:13]
+        final.append(final_str)
+        return final
 
     def read_csv(self, file, sep=',', enconding='utf-8'):
         """
@@ -115,13 +134,40 @@ class DataGrid:
     def search(self, column, value):
         pass
 
-
     def sort(self, column, direction='asc'):
-        #Transforming string into ASCII
-        decode_list = []
         if column=='owner_id':
-            return radix_sort(self.owner_id)
+            self.owner_id = radix_sort(self.owner_id)
+            if direction=='desc':
+                self.owner_id = self._invert_order(self.owner_id)
+            return self
+        
+        if column=='creation_date':
+            self.creation_date = self._preProcessingCreatedDate(self.creation_date)
+            self.creation_date = radix_sort(self.creation_date)
+            if direction=='desc':
+                self.creation_date = self._invert_order(self.creation_date)
+            self.creation_date = self._postProcressingCreatedDate(self.creation_date)
+            return self
+        
+        if column == 'id':
+            self.id = heapsort(self.id)
+            if column=='desc':
+                self.id = self._invert_order(self.id)
+            return self
 
+        if column == 'name':
+            #suspeito que seja counting sort devido ao tamanho maximo
+            if direction=='desc':
+                pass
+            return self
+        
+        if column=='count':
+            if direction=='desc':
+                pass
+            
+        if column=='content':
+            if direction=='desc':
+                pass
 
     def select_count(self, i,j):
         pass
