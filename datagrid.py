@@ -1,6 +1,6 @@
 from sort import radix_sort
 from selection import searchBinaryTree
-from data_storage import HashTable
+from hashtable import HashTable
 import csv
 import warnings
 
@@ -17,12 +17,11 @@ class DataGrid:
     def __init__(self):
         pass
 
-
     def read_csv(self, file, sep=',', enconding='utf-8'):
         """
         Read a csv file and return a HashTable
         """
-        self.df = HashTable(100)
+        self.df = HashTable(20)
         
         with open(file) as csv_file:
             # read csv file
@@ -38,31 +37,22 @@ class DataGrid:
                 event.name = str(row[4])
                 event.content = str(row[5])
                 self.df.insert(event.id, event)
-
-        return self.df
-
+            
+            print("File read successfully")
 
     def show(self, start=0, end=100):
         """
         Show the first end-start non-empty rows of the table
         """
         while start < end:
-            event = self.df.table[start]
-        
-            if event is None:
-                end += 1 # to avoid showing empty lines
-                pass
+            if self.df.table[start] != None:
+                events = self.df.table[start]
+                for event in events:
+                    print(f"{event.id} | {event.owner_id} | {event.creation_date} | {event.count} | {event.name} | {event.content}")
+                    start += 1
             else:
-                id = event.id
-                owner_id = event.owner_id
-                creation_date = event.creation_date
-                count = event.count
-                name = event.name
-                content = event.content
-                print(f'{id} | {owner_id} | {creation_date} | {count} | {name} | {content}')
-            
-            start += 1
-
+                start += 1
+                end += 1
 
     def insert_row(self, row):
         """
@@ -75,53 +65,26 @@ class DataGrid:
         event.count = int(row["count"])
         event.name = str(row["name"])
         event.content = str(row["content"])
-
-        # Check if the id already exists
-        if self.df.table[int(event.id)] is None:
-            self.df.insert(int(event.id), event)
-            print("Row inserted successfully")
-        else:
-            warnings.warn(f"ID {int(event.id)} already exists, row not inserted")
-
+        self.df.insert(event.id, event)
 
     def delete_row(self, column, value):
-        for event in self.df.table:
-            if event is not None:
-                if column == "id" and int(event.id) == value:
-                    self.df.table[int(event.id)] = None
-                    print(f"Row with {column}: {event.id} deleted")
-                
-                elif column == "owner_id" and event.owner_id == value:
-                    self.df.table[int(event.id)] = None
-                    print(f"Row with {column}: {event.owner_id} deleted")
-                
-                elif column == "creation_date" and event.creation_date == value:
-                    self.df.table[int(event.id)] = None
-                    print(f"Row with {column}: {event.creation_date} deleted")
-                
-                elif column == "count" and event.count == value:
-                    self.df.table[int(event.id)] = None
-                    print(f"Row with {column}: {event.count} deleted")
-                
-                elif column == "name" and event.name == value:
-                    self.df.table[int(event.id)] = None
-                    print(f"Row with {column}: {event.name} deleted")
-                
-                elif column == "content" and event.content == value:
-                    self.df.table[int(event.id)] = None
-                    print(f"Row with {column}: {event.content} deleted")
+        """
+        Receives the column and the value to be deleted & deletes
+        """
+        self.df.delete(column, value)
         
-
     def search(self, column, value):
-        pass
-
+        """
+        Receives the column and the value to be searched & returns 
+        every entry accordingly
+        """
+        self.df.search(column, value)
 
     def sort(self, column, direction='asc'):
         #Transforming string into ASCII
         decode_list = []
         if column=='owner_id':
             return radix_sort(self.owner_id)
-
 
     def select_count(self, i,j):
         pass
