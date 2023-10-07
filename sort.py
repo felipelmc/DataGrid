@@ -1,6 +1,9 @@
 def swap(arr, j: int, i: int):
     arr[i], arr[j] = arr[j], arr[i]
 
+def custom_key(element):
+    return element[1]
+
 #RADIX SORT
 def radix_sort(arr):
     #Getting n
@@ -36,28 +39,31 @@ def radix_sort(arr):
     return aux   
 
 #HEAPSORT
-def heapify(arr, n: int, i: int):
+def heapify(arr, n: int, i: int, key=lambda x: x):
     idx = i
-    leftIdx = 2*i+1
-    rightIdx = 2*i+2
-    if ((leftIdx<n) and (int(arr[leftIdx]) > int(arr[idx]))):
+    leftIdx = 2 * i + 1
+    rightIdx = 2 * i + 2
+
+    if leftIdx < n and key(arr[leftIdx]) > key(arr[idx]):
         idx = leftIdx
-    if ((rightIdx<n) and (int(arr[rightIdx]) > int(arr[idx]))):
-        idx = rightIdx 
-    if (idx != i):
+    if rightIdx < n and key(arr[rightIdx]) > key(arr[idx]):
+        idx = rightIdx
+
+    if idx != i:
         swap(arr, i, idx)
-        heapify(arr, n, idx)       
-    
-def buildHeap(arr, n: int):
-    for i in range(int(n/2)-1, -1, -1):
-        heapify(arr, n, i)
+        heapify(arr, n, idx, key)
+
+def buildHeap(arr, n: int, key=lambda x: x):
+    for i in range(int(n / 2) - 1, -1, -1):
+        heapify(arr, n, i, key)
+
 
 def heapsort(arr):
     n = len(arr)
-    buildHeap(arr, n) 
+    buildHeap(arr, n, key=custom_key) 
     for i in range(n-1, 0, -1):
         swap(arr, 0, i)
-        heapify(arr, i, 0)  
+        heapify(arr, i, 0, key=custom_key)  
     return arr      
 
 

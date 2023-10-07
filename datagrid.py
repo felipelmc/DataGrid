@@ -1,4 +1,4 @@
-from sort import radix_sort, heapsort, mergesort, quicksort
+from sort import radix_sort, heapsort, mergesort, quicksort, custom_key
 from selection import searchBinaryTree
 from hashtable import HashTable
 import csv
@@ -17,11 +17,10 @@ class DataGrid:
     def __init__(self):
         pass
       
-    def _invert_order(arr):
-        n = len(arr)
-        return [arr[i] for i in range(n, -1, -1)]
+    def _invert_order(self, arr):
+        return arr[::-1]
 
-    def _preProcessingCreationDate(arr):
+    def _preProcessingCreationDate(self, arr):
         final = []
         for element in arr:
             element = element.replace("/", "")
@@ -29,6 +28,25 @@ class DataGrid:
             element = element.replace(" ", "")
             final.append(element)
         return final
+    
+    def _extractArray(self, df, column):
+        arr = []
+        for bucket in df.table:
+            if bucket is not None:
+                for event in bucket:
+                    if column == "id":
+                        arr.append((event, event.id))
+                    elif column == "owner_id":
+                        arr.append((event, event.owner_id))
+                    elif column == "creation_date":
+                        arr.append((event, event.creation_date))
+                    elif column == "count":
+                        arr.append((event, event.count))
+                    elif column == "name":
+                        arr.append((event, event.name))
+                    elif column == "content":
+                        arr.append((event, event.content))
+        return arr
 
     def _postProcessingCreationDate(arr):
         final = []
@@ -62,18 +80,22 @@ class DataGrid:
 
     def show(self, start=0, end=100):
         """
-        Show the first end-start non-empty rows of the table
+        Show the table has not been sorted yet, it will show the entries between start and end by
+        iterating over the buckets of the HashTable. 
+        If the table has been sorted, it will show the entries between stat and end of the ordered array.
         """
-        while start < end:
-            if self.df.table[start] != None:
-                events = self.df.table[start]
-                for event in events:
-                    print(f"{event.id} | {event.owner_id} | {event.creation_date} | {event.count} | {event.name} | {event.content}")
-                    start += 1
-            else:
-                start += 1
-                end += 1
+        
+        try:
+            # tries to take the last ordered array
+            arr = self.orderedArr
+        except:
+            # if it doesn't exist, just iterates over the table
+            arr = self._extractArray(self.df, "id")
 
+        while start < end:
+            self.search("id", arr[start][0].id)
+            start += 1
+        
     def insert_row(self, row):
         """
         Receives a dictionary and inserts it into the table
@@ -101,6 +123,11 @@ class DataGrid:
         self.df.search(column, value)
 
     def sort(self, column, direction='asc'):
+        """
+        Sorts the table by the column specified
+        """
+        arr = self._extractArray(self.df, column)
+
         if column=='owner_id':
             self.owner_id = radix_sort(self.owner_id)
             if direction=='desc':
@@ -115,25 +142,23 @@ class DataGrid:
             self.creation_date = self._postProcressingCreatedDate(self.creation_date)
             return self
         
-        if column == 'id':
-            self.id = heapsort(self.id)
-            if column=='desc':
-                self.id = self._invert_order(self.id)
-            return self
+        if column == 'id' or column == 'count':
+            arr = heapsort(arr)
+            if direction=='desc':
+                arr = self._invert_order(arr)
 
         if column == 'name':
             #suspeito que seja counting sort devido ao tamanho maximo
             if direction=='desc':
                 pass
             return self
-        
-        if column=='count':
-            if direction=='desc':
-                pass
             
         if column=='content':
             if direction=='desc':
                 pass
+        
+        # creates the ordered array variable
+        self.orderedArr = arr
 
-    def select_count(self, i,j):
+    def select_count(self, i, j):
         pass
