@@ -84,7 +84,6 @@ class DataGrid:
         iterating over the buckets of the HashTable. 
         If the table has been sorted, it will show the entries between stat and end of the ordered array.
         """
-        
         try:
             # tries to take the last ordered array
             arr = self.orderedArr
@@ -157,8 +156,12 @@ class DataGrid:
             if direction=='desc':
                 pass
         
-        # creates the ordered array variable
         self.orderedArr = arr
 
     def select_count(self, i, j):
-        pass
+        arr = self._extractArray(self.df, 'count')
+        # maybe here it should be quicksort so that I use quickselect to find the i and j
+        arr = heapsort(arr)
+        while i < j:
+            self.search("id", arr[i][0].id)
+            i += 1
