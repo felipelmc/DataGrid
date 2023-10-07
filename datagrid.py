@@ -15,7 +15,7 @@ class Event:
 
 class DataGrid:
     def __init__(self):
-        pass
+        self.df = None
       
     def _invert_order(self, arr):
         return arr[::-1]
@@ -125,7 +125,7 @@ class DataGrid:
         """
         Sorts the table by the column specified
         """
-        arr = self._extractArray(self.df, column)
+        arr = self._extractArray(self.df, column) #O(n)
 
         if column=='owner_id':
             self.owner_id = radix_sort(self.owner_id)
@@ -159,9 +159,8 @@ class DataGrid:
         self.orderedArr = arr
 
     def select_count(self, i, j):
-        arr = self._extractArray(self.df, 'count')
+        arr = self._extractArray(self.df, 'count') 
         # maybe here it should be quicksort so that I use quickselect to find the i and j
-        arr = heapsort(arr)
-        while i < j:
-            self.search("id", arr[i][0].id)
-            i += 1
+        #SELECT i IN O(n)
+        #SELECT j IN O(n)
+        #PERCORRE A HASHTABLE (i < count < j) #O(n)
