@@ -1,4 +1,4 @@
-from sort import radix_sort, heapsort, mergesort, quicksort, custom_key
+from sort import radix_sort, radix_sort_strings, mergesort
 from selection import searchBinaryTree
 from hashtable import HashTable
 import csv
@@ -19,15 +19,6 @@ class DataGrid:
       
     def _invert_order(self, arr):
         return arr[::-1]
-
-    def _preProcessingCreationDate(self, arr):
-        final = []
-        for element in arr:
-            element = element.replace("/", "")
-            element = element.replace(":", "")
-            element = element.replace(" ", "")
-            final.append(element)
-        return final
     
     def _extractArray(self, df, column):
         arr = []
@@ -48,13 +39,6 @@ class DataGrid:
                     arr.append((event, event.content))
                 count += 1
         return arr, count
-
-    def _postProcessingCreationDate(arr):
-        final = []
-        for e in arr:
-            final_str = e[0:3]+"/"+e[4:5]+"/"+e[6:7]+" "+e[8:9]+":"+e[10:11]+":"+e[12:13]
-        final.append(final_str)
-        return final
 
     def read_csv(self, file, sep=',', enconding='utf-8'):
         """
@@ -152,35 +136,18 @@ class DataGrid:
         """
         arr, size_arr = self._extractArray(self.df, column)
 
-        if column=='owner_id':
-            self.owner_id = radix_sort(self.owner_id)
-            if direction=='desc':
-                self.owner_id = self._invert_order(self.owner_id)
-            return self
-        
-        if column=='creation_date':
-            self.creation_date = self._preProcessingCreatedDate(self.creation_date)
-            self.creation_date = radix_sort(self.creation_date)
-            if direction=='desc':
-                self.creation_date = self._invert_order(self.creation_date)
-            self.creation_date = self._postProcressingCreatedDate(self.creation_date)
-            return self
-        
-        if column == 'id' or column == 'count':
-            arr = heapsort(arr)
-            if direction=='desc':
-                arr = self._invert_order(arr)
-
+        if column=='owner_id' or column=='creation_date':
+            arr = radix_sort_strings(arr, len(arr[0]))
+                
         if column == 'name':
-            #suspeito que seja counting sort devido ao tamanho maximo
-            if direction=='desc':
-                pass
-            return self
-            
-        if column=='content':
-            if direction=='desc':
-                pass
+            arr = radix_sort_strings(arr, 20)
         
+        if column == 'id' or column == 'count' or column=='content':
+            arr = mergesort(arr)
+
+        if direction=='desc':
+            arr = self._invert_order(arr)
+
         self.orderedArr = arr
         self.size_arr = size_arr
 
