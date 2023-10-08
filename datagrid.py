@@ -2,7 +2,6 @@ from sort import radix_sort, heapsort, mergesort, quicksort, custom_key
 from selection import searchBinaryTree
 from hashtable import HashTable
 import csv
-import warnings
 
 class Event:
     def __init__(self):
@@ -187,7 +186,6 @@ class DataGrid:
 
     def select_count(self, i, j):
         arr, size_arr = self._extractArray(self.df, 'count')
-        # maybe here it should be quicksort so that I use quickselect to find the i and j
         arr = heapsort(arr)
 
         if i > size_arr:
@@ -199,3 +197,8 @@ class DataGrid:
         while i < j:
             self.search("id", arr[i][0].id)
             i += 1
+            
+        # maybe here it should be quicksort so that I use quickselect to find the i and j
+        #SELECT i IN O(n)
+        #SELECT j IN O(n)
+        #PERCORRE A HASHTABLE (i < count < j) #O(n)
