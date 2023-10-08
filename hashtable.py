@@ -1,3 +1,5 @@
+from utils import is_prior_to, is_posterior_to, is_equal_to, boyer_moore
+
 class HashTable:
     def __init__(self, capacity, load_factor=0.75):
         self.load_factor = load_factor
@@ -108,26 +110,16 @@ class HashTable:
             else:
                 print(f"{event.id} | {event.owner_id} | {event.creation_date} | {event.count} | {event.name} | {event.content}")
 
-        elif column == "owner_id":
+        else:
             for event in self.table:
-                if event is not None and event.deleted is False and event.owner_id == value:
-                    print(f"{event.id} | {event.owner_id} | {event.creation_date} | {event.count} | {event.name} | {event.content}")
-            
-        elif column == "creation_date":
-            pass
-
-        elif column == "count":
-            for event in self.table:
-                if event is not None and event.deleted is False:
-                    if event.count >= value[0] and event.count <= value[1]:
+                if event is not None and event.deleted is False:        
+                    if (column == "owner_id" and event.owner_id == value 
+                        or (column == "creation_date" and is_posterior_to(event.creation_date, value[0]) and is_prior_to(event.creation_date, value[1]))
+                        or (column == "count" and event.count >= value[0] and event.count <= value[1])
+                        or (column == "name" and boyer_moore(event.name, value))
+                        or (column == "content" and boyer_moore(event.content, value))):
                         print(f"{event.id} | {event.owner_id} | {event.creation_date} | {event.count} | {event.name} | {event.content}")
 
-        elif column == "name":
-            pass
-
-        elif column == "content":
-            pass
-        
     def delete(self, column, value):
         """
         Deletes a row according to the value at the given column
