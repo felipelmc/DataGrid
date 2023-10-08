@@ -2,7 +2,6 @@ from sort import radix_sort, heapsort, mergesort, quicksort, custom_key
 from selection import searchBinaryTree
 from hashtable import HashTable
 import csv
-import warnings
 
 class Event:
     def __init__(self):
@@ -12,10 +11,11 @@ class Event:
         self.count = None
         self.name = None
         self.content = None
+        self.deleted = False
 
 class DataGrid:
     def __init__(self):
-        self.df = None
+        self.df = HashTable(10)
       
     def _invert_order(self, arr):
         return arr[::-1]
@@ -31,22 +31,23 @@ class DataGrid:
     
     def _extractArray(self, df, column):
         arr = []
-        for bucket in df.table:
-            if bucket is not None:
-                for event in bucket:
-                    if column == "id":
-                        arr.append((event, event.id))
-                    elif column == "owner_id":
-                        arr.append((event, event.owner_id))
-                    elif column == "creation_date":
-                        arr.append((event, event.creation_date))
-                    elif column == "count":
-                        arr.append((event, event.count))
-                    elif column == "name":
-                        arr.append((event, event.name))
-                    elif column == "content":
-                        arr.append((event, event.content))
-        return arr
+        count = 0
+        for event in df.table:
+            if event is not None and event.deleted is False:
+                if column == "id":
+                    arr.append((event, event.id))
+                elif column == "owner_id":
+                    arr.append((event, event.owner_id))
+                elif column == "creation_date":
+                    arr.append((event, event.creation_date))
+                elif column == "count":
+                    arr.append((event, event.count))
+                elif column == "name":
+                    arr.append((event, event.name))
+                elif column == "content":
+                    arr.append((event, event.content))
+                count += 1
+        return arr, count
 
     def _postProcessingCreationDate(arr):
         final = []
@@ -58,9 +59,7 @@ class DataGrid:
     def read_csv(self, file, sep=',', enconding='utf-8'):
         """
         Read a csv file and return a HashTable
-        """
-        self.df = HashTable(20)
-        
+        """ 
         with open(file) as csv_file:
             # read csv file
             csv_reader = csv.reader(csv_file, delimiter=sep)
@@ -80,17 +79,21 @@ class DataGrid:
 
     def show(self, start=0, end=100):
         """
-        Show the table has not been sorted yet, it will show the entries between start and end by
-        iterating over the buckets of the HashTable. 
-        If the table has been sorted, it will show the entries between stat and end of the ordered array.
+        If the table has not been sorted yet, it will show the entries between start and end by
+        iterating over the items of the HashTable. 
+        If the table has been sorted, it will show the entries between start and end of the ordered array.
         """
+
         try:
             # tries to take the last ordered array
             arr = self.orderedArr
+            if end > self.size_arr:
+                end = self.size_arr
         except:
-            # if it doesn't exist, just iterates over the table
-            arr = self._extractArray(self.df, "id")
-
+            arr, size_arr = self._extractArray(self.df, 'id')
+            if end > size_arr:
+                end = size_arr
+        
         while start < end:
             self.search("id", arr[start][0].id)
             start += 1
@@ -112,20 +115,42 @@ class DataGrid:
         """
         Receives the column and the value to be deleted & deletes
         """
-        self.df.delete(column, value)
+        if column == "id":
+            self.df.delete(value)
+        elif column == "owner_id":
+            pass
+        elif column == "creation_date":
+            pass
+        elif column == "count":
+            pass
+        elif column == "name":
+            pass
+        elif column == "content":
+            pass
         
     def search(self, column, value):
         """
         Receives the column and the value to be searched & returns 
         every entry accordingly
         """
-        self.df.search(column, value)
+        if column == "id":
+            self.df.search(value)
+        elif column == "owner_id":
+            pass
+        elif column == "creation_date":
+            pass
+        elif column == "count":
+            pass
+        elif column == "name":
+            pass
+        elif column == "content":
+            pass
 
     def sort(self, column, direction='asc'):
         """
         Sorts the table by the column specified
         """
-        arr = self._extractArray(self.df, column) #O(n)
+        arr, size_arr = self._extractArray(self.df, column)
 
         if column=='owner_id':
             self.owner_id = radix_sort(self.owner_id)
@@ -157,9 +182,22 @@ class DataGrid:
                 pass
         
         self.orderedArr = arr
+        self.size_arr = size_arr
 
     def select_count(self, i, j):
-        arr = self._extractArray(self.df, 'count') 
+        arr, size_arr = self._extractArray(self.df, 'count')
+        arr = heapsort(arr)
+
+        if i > size_arr:
+            i = size_arr
+        
+        if j > size_arr:
+            j = size_arr
+
+        while i < j:
+            self.search("id", arr[i][0].id)
+            i += 1
+            
         # maybe here it should be quicksort so that I use quickselect to find the i and j
         #SELECT i IN O(n)
         #SELECT j IN O(n)
