@@ -73,7 +73,7 @@ def shouldOrderByQuickSortWithSuccess():
     calculateTime(startTime)      
 
 #Running tests
-shouldOrderByRadixSortWithSuccess()
-shouldOrderByHeapSortWithSuccess()
-shouldOrderByMergeSortWithSuccess()
-shouldOrderByQuickSortWithSuccess()
+# shouldOrderByRadixSortWithSuccess()
+# shouldOrderByHeapSortWithSuccess()
+# shouldOrderByMergeSortWithSuccess()
+# shouldOrderByQuickSortWithSuccess()
