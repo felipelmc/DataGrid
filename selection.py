@@ -1,4 +1,4 @@
-from sort import swap
+from sort import quicksort, swap
 
 def partition(arr, p, r):
     pivot = arr[r][1]
@@ -22,4 +22,47 @@ def quickselect(arr, x):
             p = q + 1
         else:
             r = q - 1
-    return arr[p]
+    return arr[p] 
+
+
+# define selectMOM
+def selectMOM(arr, k):
+    if len(arr) == 1:
+        return arr[0]
+    
+    # Divide the input into groups of 5
+    groups_of_five = [arr[i:i+5] for i in range(0, len(arr), 5)]
+
+    # Calculate the median of each group of 5 using quicksort
+    medians = [quicksort(group)[len(group) // 2] for group in groups_of_five]
+
+    # Find the median of medians
+    pivot = selectMOM(medians, len(medians) // 2)
+
+    left = []
+    middle = []
+    right = []
+
+    for x in arr:
+        if x[1] < pivot[1]:
+            left.append(x)
+        elif x[1] == pivot[1]:
+            middle.append(x)
+        else:
+            right.append(x)
+
+    if k < len(left):
+        return selectMOM(left, k)
+    elif k < len(left) + len(middle):
+        return middle[0]
+    else:
+        return selectMOM(right, k - len(left) - len(middle))
+
+# arr = [12, 3, 9, 4, 7, 21, 15, 6, 14]
+# k = 4  # should be 7
+
+# result = selectMOM(arr, k-1)  # 0-indexed
+# print("Smallest element with selectMOM", result)
+
+# result2 = quickselect(arr, k-1)
+# print("Smallest element with quickselect", result2)
