@@ -1,6 +1,11 @@
-from sort import quicksort, swap
+from sort import quicksort
+from utils import swap
 
+####### QUICKSELECT ####### 
 def partition(arr, p, r):
+    """
+    Partition algorithm for quickselect
+    """
     pivot = arr[r][1]
     i = p - 1
     for j in range(p, r):
@@ -10,8 +15,10 @@ def partition(arr, p, r):
     swap(arr, i + 1, r)
     return i + 1
 
-# define quickselect inputing just arr and x
 def quickselect(arr, x):
+    """
+    Quickselect algorithm
+    """
     p = 0
     r = len(arr) - 1
     while p < r:
@@ -24,9 +31,11 @@ def quickselect(arr, x):
             r = q - 1
     return arr[p] 
 
-
-# define selectMOM
+####### MEDIAN OF MEDIANS ####### 
 def selectMOM(arr, k):
+    """
+    Median of Medians algorithm
+    """
     if len(arr) == 1:
         return arr[0]
     
@@ -57,12 +66,3 @@ def selectMOM(arr, k):
         return middle[0]
     else:
         return selectMOM(right, k - len(left) - len(middle))
-
-# arr = [12, 3, 9, 4, 7, 21, 15, 6, 14]
-# k = 4  # should be 7
-
-# result = selectMOM(arr, k-1)  # 0-indexed
-# print("Smallest element with selectMOM", result)
-
-# result2 = quickselect(arr, k-1)
-# print("Smallest element with quickselect", result2)
