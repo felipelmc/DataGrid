@@ -112,22 +112,22 @@ class DataGrid:
         arr = self._extractArray(self.df, column) #O(n)
 
         if column=='owner_id':
-            arr = radix_sort_strings(arr)
+            arr = radix_sort_strings(arr, 5)
         
         if column=='creation_date':
-            arr = radix_sort_strings(arr)
+            arr = radix_sort_strings(arr, 19)
                 
         if column == 'name':
-            self.name = radix_sort_strings(self.name, 20)
+            arr = radix_sort_strings(arr, 20)
         
         if column == 'id':
-            self.id = mergesort(self.id)
+            arr = mergesort(arr)
 
         if column =='count':
-            self.count = mergesort(self.count) 
+            arr = mergesort(arr) 
 
         if column=='content':
-            self.content = mergesort(self.content)
+            arr = mergesort(arr)
 
         if direction=='desc':
             arr = self._invert_order(arr)
