@@ -1,4 +1,5 @@
-from sort import radix_sort, radix_sort_strings, mergesort
+#from sort import radix_sort, radix_sort_strings, mergesort
+from sort import radix_sort_strings, mergesort
 from selection import quickselect
 from hashtable import HashTable
 import csv
@@ -99,36 +100,14 @@ class DataGrid:
         """
         Receives the column and the value to be deleted & deletes
         """
-        if column == "id":
-            self.df.delete(value)
-        elif column == "owner_id":
-            pass
-        elif column == "creation_date":
-            pass
-        elif column == "count":
-            pass
-        elif column == "name":
-            pass
-        elif column == "content":
-            pass
+        self.df.delete(column, value)
         
     def search(self, column, value):
         """
         Receives the column and the value to be searched & returns 
         every entry accordingly
         """
-        if column == "id":
-            self.df.search(value)
-        elif column == "owner_id":
-            pass
-        elif column == "creation_date":
-            pass
-        elif column == "count":
-            pass
-        elif column == "name":
-            pass
-        elif column == "content":
-            pass
+        self.df.search(column, value)
 
     def sort(self, column, direction='asc'):
         """
@@ -178,8 +157,8 @@ class DataGrid:
             #             print(f"{event[0].id} | {event[0].owner_id} | {event[0].creation_date} | {event[0].count} | {event[0].name} | {event[0].content}")
             #     i += 1
         
-        elif how == 'heapsort':
-            arr = heapsort(arr)
-            while i < j:
-                print(f"{arr[i][0].id} | {arr[i][0].owner_id} | {arr[i][0].creation_date} | {arr[i][0].count} | {arr[i][0].name} | {arr[i][0].content}")
-                i += 1
+        # elif how == 'heapsort':
+        #     arr = heapsort(arr)
+        #     while i < j:
+        #         print(f"{arr[i][0].id} | {arr[i][0].owner_id} | {arr[i][0].creation_date} | {arr[i][0].count} | {arr[i][0].name} | {arr[i][0].content}")
+        #         i += 1

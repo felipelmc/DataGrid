@@ -1,5 +1,3 @@
-import warnings
-
 class HashTable:
     def __init__(self, capacity, load_factor=0.75):
         self.load_factor = load_factor
@@ -83,63 +81,109 @@ class HashTable:
                 hashed_id = (hashed_id + 1) % self.capacity
                 count += 1
 
-    def search(self, value):
+    def search(self, column, value):
         """
         Search for a value in column "id" of the table
         """
-        h = self._hash(value)
-        event = None
-        count = 0
+        if column == "id":
+            h = self._hash(value)
+            event = None
+            count = 0
 
-        while count < self.capacity:
-            event = self.table[h]
-            # there never was a node with that id
-            if event is None:
-                break
-            # there is a node with that id and it is not deleted
-            if event.id == value and event.deleted is False:
-                break
-            h = (h + 1) % self.capacity
-            count += 1
+            while count < self.capacity:
+                event = self.table[h]
+                # there never was a node with that id
+                if event is None:
+                    break
+                # there is a node with that id and it is not deleted
+                if event.id == value and event.deleted is False:
+                    break
+                h = (h + 1) % self.capacity
+                count += 1
+            
+            # if the node is None or deleted, it means that the node was not found
+            if event is None or event.deleted is True:
+                print(f"Row with id = {value} not found")
+            # otherwise, print the node
+            else:
+                print(f"{event.id} | {event.owner_id} | {event.creation_date} | {event.count} | {event.name} | {event.content}")
+
+        elif column == "owner_id":
+            for event in self.table:
+                if event is not None and event.deleted is False and event.owner_id == value:
+                    print(f"{event.id} | {event.owner_id} | {event.creation_date} | {event.count} | {event.name} | {event.content}")
+            
+        elif column == "creation_date":
+            pass
+
+        elif column == "count":
+            for event in self.table:
+                if event is not None and event.deleted is False:
+                    if event.count >= value[0] and event.count <= value[1]:
+                        print(f"{event.id} | {event.owner_id} | {event.creation_date} | {event.count} | {event.name} | {event.content}")
+
+        elif column == "name":
+            pass
+
+        elif column == "content":
+            pass
         
-        # if the node is None or deleted, it means that the node was not found
-        if event is None or event.deleted is True:
-            print(f"Row with id = {value} not found")
-        # otherwise, print the node
-        else:
-            print(f"{event.id} | {event.owner_id} | {event.creation_date} | {event.count} | {event.name} | {event.content}")
-
-    def delete(self, value):
+    def delete(self, column, value):
         """
         Deletes a row according to the value at the given column
         """
-        hashed_id = self._hash(value)
-        event = None
-        count = 0
-        changed_flag = False
+        if column == "id":
+            hashed_id = self._hash(value)
+            event = None
+            count = 0
+            changed_flag = False
 
-        while count < self.capacity:
-            event = self.table[hashed_id]
-            # there never was a node with that id
-            if event is None:
-                break
-            # there is a node with that id and it is not deleted
-            if event.id == value and event.deleted is False:
-                # delete the node
-                event.deleted = True
-                # set the flag to True
-                changed_flag = True
-                # decrease the size
-                self.size -= 1
-                break
-            # otherwise, keep searching
-            hashed_id = (hashed_id + 1) % self.capacity
-            count += 1
+            while count < self.capacity:
+                event = self.table[hashed_id]
+                # there never was a node with that id
+                if event is None:
+                    break
+                # there is a node with that id and it is not deleted
+                if event.id == value and event.deleted is False:
+                    # delete the node
+                    event.deleted = True
+                    # set the flag to True
+                    changed_flag = True
+                    # decrease the size
+                    self.size -= 1
+                    break
+                # otherwise, keep searching
+                hashed_id = (hashed_id + 1) % self.capacity
+                count += 1
+            
+            # if the node is None, it means that the node was not found
+            if event is None or changed_flag is False:
+                print(f"Row with id = {value} not found")
+            # if the node was deleted
+            elif event.deleted is True and changed_flag is True:
+                print(f"Row with id = {value} deleted")
         
-        # if the node is None, it means that the node was not found
-        if event is None or changed_flag is False:
-            print(f"Row with id = {value} not found")
-        # if the node was deleted
-        elif event.deleted is True and changed_flag is True:
-            print(f"Row with id = {value} deleted")
+        elif column == "owner_id":
+            for event in self.table:
+                if event is not None and event.deleted is False and event.owner_id == value:
+                    event.deleted = True
+                    self.size -= 1
+                    print(f"Row with owner_id = {value} deleted")
+
+        elif column == "creation_date":
+            pass
+
+        elif column == "count":
+            for event in self.table:
+                if event is not None and event.deleted is False:
+                    if event.count == value:
+                        event.deleted = True
+                        self.size -= 1
+                        print(f"Row with count = {event.count} deleted")
+
+        elif column == "name":
+            pass
+
+        elif column == "content":
+            pass
         
