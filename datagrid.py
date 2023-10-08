@@ -1,5 +1,5 @@
 from sort import radix_sort, radix_sort_strings, mergesort
-from selection import searchBinaryTree
+from selection import quickselect
 from hashtable import HashTable
 import csv
 
@@ -151,21 +151,35 @@ class DataGrid:
         self.orderedArr = arr
         self.size_arr = size_arr
 
-    def select_count(self, i, j):
+    def select_count(self, i, j, how='quickselect'):
         arr, size_arr = self._extractArray(self.df, 'count')
-        arr = heapsort(arr)
-
+        
         if i > size_arr:
             i = size_arr
         
         if j > size_arr:
             j = size_arr
 
-        while i < j:
-            self.search("id", arr[i][0].id)
-            i += 1
+        if how == 'quickselect':
+            # quickselect gives the i-th and j-th smallest values
+            i_quick = quickselect(arr, i)[1]
+            j_quick = quickselect(arr, j)[1]
+
+            # print every event between i-th value and j-th value, in the range of i and j
+            while i <= j:
+                if arr[i][1] >= i_quick and arr[i][1] <= j_quick:
+                    print(f"{arr[i][0].id} | {arr[i][0].owner_id} | {arr[i][0].creation_date} | {arr[i][0].count} | {arr[i][0].name} | {arr[i][0].content}")
+                i += 1
             
-        # maybe here it should be quicksort so that I use quickselect to find the i and j
-        #SELECT i IN O(n)
-        #SELECT j IN O(n)
-        #PERCORRE A HASHTABLE (i < count < j) #O(n)
+            # print every event between i and j, starting from i
+            # while i <= j:
+            #     for event in arr:
+            #         if event[0].count == i:
+            #             print(f"{event[0].id} | {event[0].owner_id} | {event[0].creation_date} | {event[0].count} | {event[0].name} | {event[0].content}")
+            #     i += 1
+        
+        elif how == 'heapsort':
+            arr = heapsort(arr)
+            while i < j:
+                print(f"{arr[i][0].id} | {arr[i][0].owner_id} | {arr[i][0].creation_date} | {arr[i][0].count} | {arr[i][0].name} | {arr[i][0].content}")
+                i += 1
