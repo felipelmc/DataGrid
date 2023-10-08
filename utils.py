@@ -50,4 +50,10 @@ def boyer_moore(text, pattern):
         bad_char_shift = bad_char_table.get(text[i], pattern_length)
         i += max(1, j - bad_char_shift)
 
-    return False           
+    return False     
+
+def swap(arr, j: int, i: int):
+    arr[i], arr[j] = arr[j], arr[i]
+
+def custom_key(element):
+    return element[1]      
