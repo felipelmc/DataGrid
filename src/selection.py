@@ -1,11 +1,18 @@
 from sort import quicksort
 from utils import swap
+import random
 
 ####### QUICKSELECT ####### 
 def partition(arr, p, r):
     """
-    Partition algorithm for quickselect
+    Partition algorithm for quickselect with a random pivot
     """
+    # Choose a random pivot index within the range [p, r]
+    pivot_index = random.randint(p, r)
+
+    # Swap the pivot element with the last element in the subarray
+    swap(arr, pivot_index, r)
+
     pivot = arr[r][1]
     i = p - 1
     for j in range(p, r):

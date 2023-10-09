@@ -81,7 +81,6 @@ class HashTable:
             elif self.table[hashed_id].id == id:
                 # update the event
                 self.table[hashed_id] = event
-                print(f"Row with id = {id} updated")
                 break
             # If the node is not None and it is not deleted, keep going
             else:
@@ -110,12 +109,13 @@ class HashTable:
             
             # if the node is None or deleted, it means that the node was not found
             if event is None or event.deleted is True:
-                print(f"Row with id = {value} not found")
+                return None
             # otherwise, print the node
             else:
-                print(f"{event.id} | {event.owner_id} | {event.creation_date} | {event.count} | {event.name} | {event.content}")
+                return event
 
         else:
+            objects = []
             n_found = 0
             for event in self.table:
                 if event is not None and event.deleted is False:
@@ -125,12 +125,13 @@ class HashTable:
                         or (column == "count" and event.count >= value[0] and event.count <= value[1])
                         or (column == "name" and is_substring(event.name, value, n))
                         or (column == "content" and is_substring(event.content, value, n))):
-
-                        print(f"{event.id} | {event.owner_id} | {event.creation_date} | {event.count} | {event.name} | {event.content}")
+                        objects.append(event)
                         n_found += 1
             
             if n_found == 0:
-                print(f"Specified row(s) not found")
+                return None
+            else:
+                return objects
 
     def delete(self, column, value):
         """
@@ -162,13 +163,12 @@ class HashTable:
             
             # if the node is None, it means that the node was not found
             if event is None or changed_flag is False:
-                print(f"Row with id = {value} not found")
+                return
             # if the node was deleted
             elif event.deleted is True and changed_flag is True:
-                print(f"Row with id = {value} deleted")
+                return
         
         else:
-            n_deleted = 0
             for event in self.table:
                 if event is not None and event.deleted is False:  
                     n = len(value)  
@@ -181,11 +181,3 @@ class HashTable:
                         event.deleted = True
                         # decrease the size
                         self.size -= 1
-                        # increase the number of deleted events
-                        n_deleted += 1
-            
-            if n_deleted == 0:
-                print(f"Specified row(s) not found")
-            else:
-                print(f"{n_deleted} row(s) were deleted")
-        

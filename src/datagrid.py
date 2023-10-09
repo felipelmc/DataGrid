@@ -3,6 +3,7 @@ from sort import radix_sort_strings, mergesort, heapsort
 from selection import quickselect, selectMOM
 from hashtable import HashTable
 import csv
+import warnings
 
 class Event:
     def __init__(self):
@@ -41,11 +42,11 @@ class DataGrid:
                 count += 1
         return arr, count
 
-    def read_csv(self, file, sep=',', enconding='utf-8'):
+    def read_csv(self, file, sep=',', encoding='utf-8'):
         """
         Read a csv file and return a HashTable
         """ 
-        with open(file) as csv_file:
+        with open(file, encoding=encoding) as csv_file:
             # read csv file
             csv_reader = csv.reader(csv_file, delimiter=sep)
             
@@ -59,10 +60,8 @@ class DataGrid:
                 event.name = str(row[4])
                 event.content = str(row[5])
                 self.df.insert(event.id, event)
-            
-            print("File read successfully")
 
-    def show(self, start=0, end=100):
+    def show(self, start=0, end=100, returns = True, prints = False):
         """
         If the table has not been sorted yet, it will show the entries between start and end by
         iterating over the items of the HashTable. 
@@ -73,15 +72,31 @@ class DataGrid:
             # tries to take the last ordered array
             arr = self.orderedArr
             if end > self.size_arr:
-                end = self.size_arr
+                end = self.size_arr - 1
+                warnings.warn("`end` is greater than the size of the datagrid, setting `end` to the datagrid size")
         except:
             arr, size_arr = self._extractArray(self.df, 'id')
             if end > size_arr:
-                end = size_arr
+                end = size_arr - 1
+                warnings.warn("`end` is greater than the size of the datagrid, setting `end` to the datagrid size")
         
-        while start < end:
-            self.search("id", arr[start][0].id)
+        objects = []
+        while start <= end:
+            object = self.search("id", arr[start][0].id)
+            
+            if prints == True and object is not None:
+                print(f"{object.id} {object.owner_id} {object.creation_date} {object.count} {object.name} {object.content}")
+                objects.append(object)
+            elif object is not None:
+                objects.append(object)
+            else:  
+                end += 1
+
             start += 1
+        
+        if returns == True:
+            return objects
+
         
     def insert_row(self, row):
         """
@@ -100,14 +115,29 @@ class DataGrid:
         """
         Receives the column and the value to be deleted & deletes
         """
-        self.df.delete(column, value)
+        if column == "position":
+            try:
+            # tries to take the last ordered array
+                arr = self.orderedArr
+            except:
+                arr, _ = self._extractArray(self.df, 'id')
+            
+            if type(value) == tuple:
+                for i in range(value[0], value[1]+1):
+                    self.df.delete("id", arr[i][0].id)
+            elif type(value) == int:
+                self.df.delete("id", arr[value][0].id)
+
+        else:
+            self.df.delete(column, value)
         
     def search(self, column, value):
         """
         Receives the column and the value to be searched & returns 
         every entry accordingly
         """
-        self.df.search(column, value)
+        objects = self.df.search(column, value)
+        return objects
 
     def sort(self, column, direction='asc'):
         """
@@ -134,38 +164,64 @@ class DataGrid:
         arr, size_arr = self._extractArray(self.df, 'count')
         
         if i > size_arr:
-            i = size_arr
+            i = size_arr-1
+            warnings.warn("`i` is greater than the size of the datagrid, setting i to size of the datagrid")
+
+        if i < 0:
+            i = 0
+            warnings.warn("i is less than 0, setting i to 0")
         
         if j > size_arr:
-            j = size_arr
+            j = size_arr-1
+            warnings.warn("j is greater than the size of the datagrid, setting j the size of the datagrid")
 
         if how == 'median-of-medians':
             # median-of-medians gives the i-th and j-th smallest values
             i_mom = selectMOM(arr, i)[1]
             j_mom = selectMOM(arr, j)[1]
 
+            entries = []
             count = 0
             for event in arr:
                 if event[1] >= i_mom and event[1] <= j_mom:
                     count += 1
-                    print(f"{event[0].id} | {event[0].owner_id} | {event[0].creation_date} | {event[0].count} | {event[0].name} | {event[0].content}")
+                    entries.append((event[0], event[1]))
                 if count == j - i + 1:
+                    entries = heapsort(entries)
                     break
+            
+            objects = []
+
+            for event in entries:
+                objects.append(event[0])
+
+            return objects
 
         elif how == 'quickselect':
             i_quick = quickselect(arr, i)[1]
             j_quick = quickselect(arr, j)[1]
 
+            entries = []
             count = 0
             for event in arr:
                 if event[1] >= i_quick and event[1] <= j_quick:
                     count += 1
-                    print(f"{event[0].id} | {event[0].owner_id} | {event[0].creation_date} | {event[0].count} | {event[0].name} | {event[0].content}")
+                    entries.append((event[0], event[1]))
                 if count == j - i + 1:
+                    entries = heapsort(entries)
                     break
+
+            objects = []
+
+            for event in entries:
+                objects.append(event[0])
+
+            return objects
 
         elif how == 'heapsort':
             arr = heapsort(arr)
-            while i <= j:
-                print(f"{arr[i][0].id} | {arr[i][0].owner_id} | {arr[i][0].creation_date} | {arr[i][0].count} | {arr[i][0].name} | {arr[i][0].content}")
-                i += 1
+            objects = []
+            for event in arr:
+                objects.append(event[0])
+
+            return objects[:j-i+1]
