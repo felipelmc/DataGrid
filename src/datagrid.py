@@ -42,11 +42,11 @@ class DataGrid:
                 count += 1
         return arr, count
 
-    def read_csv(self, file, sep=',', enconding='utf-8'):
+    def read_csv(self, file, sep=',', encoding='utf-8'):
         """
         Read a csv file and return a HashTable
         """ 
-        with open(file) as csv_file:
+        with open(file, encoding=encoding) as csv_file:
             # read csv file
             csv_reader = csv.reader(csv_file, delimiter=sep)
             
