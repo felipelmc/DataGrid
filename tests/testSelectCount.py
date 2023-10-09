@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../src')
+
 from datagrid import DataGrid
 import time
 
