@@ -1,6 +1,6 @@
 #from sort import radix_sort, radix_sort_strings, mergesort
-from sort import radix_sort_strings, mergesort
-from selection import quickselect
+from sort import radix_sort_strings, mergesort, heapsort
+from selection import quickselect, selectMOM
 from hashtable import HashTable
 import csv
 
@@ -130,7 +130,7 @@ class DataGrid:
         self.orderedArr = arr
         self.size_arr = size_arr
 
-    def select_count(self, i, j, how='quickselect'):
+    def select_count(self, i, j, how='median-of-medians'):
         arr, size_arr = self._extractArray(self.df, 'count')
         
         if i > size_arr:
@@ -139,26 +139,33 @@ class DataGrid:
         if j > size_arr:
             j = size_arr
 
-        if how == 'quickselect':
-            # quickselect gives the i-th and j-th smallest values
+        if how == 'median-of-medians':
+            # median-of-medians gives the i-th and j-th smallest values
+            i_mom = selectMOM(arr, i)[1]
+            j_mom = selectMOM(arr, j)[1]
+
+            count = 0
+            for event in arr:
+                if event[1] >= i_mom and event[1] <= j_mom:
+                    count += 1
+                    print(f"{event[0].id} | {event[0].owner_id} | {event[0].creation_date} | {event[0].count} | {event[0].name} | {event[0].content}")
+                if count == j - i + 1:
+                    break
+
+        elif how == 'quickselect':
             i_quick = quickselect(arr, i)[1]
             j_quick = quickselect(arr, j)[1]
 
-            # print every event between i-th value and j-th value, in the range of i and j
+            count = 0
+            for event in arr:
+                if event[1] >= i_quick and event[1] <= j_quick:
+                    count += 1
+                    print(f"{event[0].id} | {event[0].owner_id} | {event[0].creation_date} | {event[0].count} | {event[0].name} | {event[0].content}")
+                if count == j - i + 1:
+                    break
+
+        elif how == 'heapsort':
+            arr = heapsort(arr)
             while i <= j:
-                if arr[i][1] >= i_quick and arr[i][1] <= j_quick:
-                    print(f"{arr[i][0].id} | {arr[i][0].owner_id} | {arr[i][0].creation_date} | {arr[i][0].count} | {arr[i][0].name} | {arr[i][0].content}")
+                print(f"{arr[i][0].id} | {arr[i][0].owner_id} | {arr[i][0].creation_date} | {arr[i][0].count} | {arr[i][0].name} | {arr[i][0].content}")
                 i += 1
-            
-            # print every event between i and j, starting from i
-            # while i <= j:
-            #     for event in arr:
-            #         if event[0].count == i:
-            #             print(f"{event[0].id} | {event[0].owner_id} | {event[0].creation_date} | {event[0].count} | {event[0].name} | {event[0].content}")
-            #     i += 1
-        
-        # elif how == 'heapsort':
-        #     arr = heapsort(arr)
-        #     while i < j:
-        #         print(f"{arr[i][0].id} | {arr[i][0].owner_id} | {arr[i][0].creation_date} | {arr[i][0].count} | {arr[i][0].name} | {arr[i][0].content}")
-        #         i += 1

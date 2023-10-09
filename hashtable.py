@@ -78,6 +78,11 @@ class HashTable:
                 self.table[hashed_id] = event
                 self.size += 1
                 break
+            elif self.table[hashed_id].id == id:
+                # update the event
+                self.table[hashed_id] = event
+                print(f"Row with id = {id} updated")
+                break
             # If the node is not None and it is not deleted, keep going
             else:
                 hashed_id = (hashed_id + 1) % self.capacity
@@ -111,6 +116,7 @@ class HashTable:
                 print(f"{event.id} | {event.owner_id} | {event.creation_date} | {event.count} | {event.name} | {event.content}")
 
         else:
+            n_found = 0
             for event in self.table:
                 if event is not None and event.deleted is False:
                     n = len(value)  
@@ -121,6 +127,10 @@ class HashTable:
                         or (column == "content" and is_substring(event.content, value, n))):
 
                         print(f"{event.id} | {event.owner_id} | {event.creation_date} | {event.count} | {event.name} | {event.content}")
+                        n_found += 1
+            
+            if n_found == 0:
+                print(f"Specified row(s) not found")
 
     def delete(self, column, value):
         """
@@ -157,27 +167,24 @@ class HashTable:
             elif event.deleted is True and changed_flag is True:
                 print(f"Row with id = {value} deleted")
         
-        elif column == "owner_id":
+        else:
+            n_deleted = 0
             for event in self.table:
-                if event is not None and event.deleted is False and event.owner_id == value:
-                    event.deleted = True
-                    self.size -= 1
-                    print(f"Row with owner_id = {value} deleted")
-
-        elif column == "creation_date":
-            pass
-
-        elif column == "count":
-            for event in self.table:
-                if event is not None and event.deleted is False:
-                    if event.count == value:
+                if event is not None and event.deleted is False:        
+                    if (column == "owner_id" and event.owner_id == value 
+                        or (column == "creation_date" and is_posterior_to(event.creation_date, value[0]) and is_prior_to(event.creation_date, value[1]))
+                        or (column == "count" and event.count >= value[0] and event.count <= value[1])
+                        or (column == "name" and boyer_moore(event.name, value))
+                        or (column == "content" and boyer_moore(event.content, value))):
+                        # delete the event
                         event.deleted = True
+                        # decrease the size
                         self.size -= 1
-                        print(f"Row with count = {event.count} deleted")
-
-        elif column == "name":
-            pass
-
-        elif column == "content":
-            pass
+                        # increase the number of deleted events
+                        n_deleted += 1
+            
+            if n_deleted == 0:
+                print(f"Specified row(s) not found")
+            else:
+                print(f"{n_deleted} row(s) were deleted")
         

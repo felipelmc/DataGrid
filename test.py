@@ -1,7 +1,7 @@
 from datagrid import Event
 import time
 import random
-from sort import radix_sort, heapsort, mergesort, quicksort
+from sort import radix_sort_strings, heapsort, mergesort, quicksort
 
 def calculateTime(startTime):
     total = time.time()-startTime
