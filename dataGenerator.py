@@ -49,7 +49,7 @@ def shuffle_data(file):
         with open(f'data/{file}', 'w') as f:
             f.writelines(lines)
 
-n = [10, 100, 1000, 10000, 100000, 300000, 500000]
+n = [10, 100, 1000, 10000, 30000, 50000, 70000, 100000, 300000, 500000, 20000, 50000, 70000, 200000, 400000]
 
 for i in n:
     generate_data(i)

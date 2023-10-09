@@ -4,7 +4,7 @@ sys.path.append('../src/')
 from datagrid import DataGrid
 import time
 
-n = [10, 100, 1000, 10000, 100000, 300000, 500000]
+n = set([10, 100, 1000, 10000, 30000, 50000, 70000, 100000, 300000, 500000, 20000, 50000, 70000, 200000, 400000])
 
 with open(f'../results/testInsert.csv', 'w') as f:
     f.write('n,time\n')

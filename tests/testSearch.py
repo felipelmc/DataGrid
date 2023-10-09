@@ -4,7 +4,7 @@ sys.path.append('../src')
 from datagrid import DataGrid
 import time
 
-n = [10, 100, 1000, 10000, 100000, 300000, 500000]
+n = set([10, 100, 1000, 10000, 30000, 50000, 70000, 100000, 300000, 500000, 20000, 50000, 70000, 200000, 400000])
 columns = ['id', 'owner_id', 'creation_date', 'count', 'name', 'content']
 
 ids = [7, 99, 504, 1500, 19001, 200002, 40003]
@@ -17,9 +17,9 @@ creation_dates = [("2010/01/15 00:00:00", "2010/02/28 23:59:59"), ("2013/05/10 0
 
 counts = [(3, 7), (1, 2), (1, 5), (2, 4), (5, 10)]
 
-names = ["AX", "HX", "PF", "KL", "QW"]
+names = ["AX", "HX", "PFL", "RKL", "Q"]
 
-contents = ["AX", "HX", "PF", "KL", "QW"]
+contents = ["A", "HX", "PLFRT", "KLTV", "WRT"]
 
 with open(f'../results/testSearch.csv', 'w') as f:
     f.write('column,n,mean_time\n')
