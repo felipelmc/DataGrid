@@ -25,13 +25,12 @@ with open(f'../results/testDelete.csv', 'w') as f:
     f.write('column,n,mean_time\n')
 
     for i in n:
-        datagrid = DataGrid()
-        datagrid.read_csv(f'../data/fake_data{i}.csv')
-
         for column in columns:
             if column == 'id':
                 times = []
                 for id in ids:
+                    datagrid = DataGrid()
+                    datagrid.read_csv(f'../data/fake_data{i}.csv')
                     start_time = time.time()
                     
                     datagrid.delete_row(column, id)
@@ -47,6 +46,8 @@ with open(f'../results/testDelete.csv', 'w') as f:
             elif column == 'owner_id':
                 times = []
                 for owner_id in owner_ids:
+                    datagrid = DataGrid()
+                    datagrid.read_csv(f'../data/fake_data{i}.csv')
                     start_time = time.time()
                     
                     datagrid.delete_row(column, owner_id)
@@ -62,6 +63,8 @@ with open(f'../results/testDelete.csv', 'w') as f:
             elif column == 'creation_date':
                 times = []
                 for creation_date in creation_dates:
+                    datagrid = DataGrid()
+                    datagrid.read_csv(f'../data/fake_data{i}.csv')
                     start_time = time.time()
                     
                     datagrid.delete_row(column, creation_date)
@@ -77,6 +80,8 @@ with open(f'../results/testDelete.csv', 'w') as f:
             elif column == 'count':
                 times = []
                 for count in counts:
+                    datagrid = DataGrid()
+                    datagrid.read_csv(f'../data/fake_data{i}.csv')
                     start_time = time.time()
                     
                     datagrid.delete_row(column, count)
@@ -92,6 +97,8 @@ with open(f'../results/testDelete.csv', 'w') as f:
             elif column == 'name':
                 times = []
                 for name in names:
+                    datagrid = DataGrid()
+                    datagrid.read_csv(f'../data/fake_data{i}.csv')
                     start_time = time.time()
                     
                     datagrid.delete_row(column, name)
@@ -107,6 +114,8 @@ with open(f'../results/testDelete.csv', 'w') as f:
             elif column == 'content':
                 times = []
                 for content in contents:
+                    datagrid = DataGrid()
+                    datagrid.read_csv(f'../data/fake_data{i}.csv')
                     start_time = time.time()
                     
                     datagrid.delete_row(column, content)
