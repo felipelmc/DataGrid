@@ -170,12 +170,13 @@ class HashTable:
         else:
             n_deleted = 0
             for event in self.table:
-                if event is not None and event.deleted is False:        
+                if event is not None and event.deleted is False:  
+                    n = len(value)  
                     if (column == "owner_id" and event.owner_id == value 
                         or (column == "creation_date" and is_posterior_to(event.creation_date, value[0]) and is_prior_to(event.creation_date, value[1]))
                         or (column == "count" and event.count >= value[0] and event.count <= value[1])
-                        or (column == "name" and boyer_moore(event.name, value))
-                        or (column == "content" and boyer_moore(event.content, value))):
+                        or (column == "name" and is_substring(event.name, value, n))
+                        or (column == "content" and is_substring(event.content, value, n))):
                         # delete the event
                         event.deleted = True
                         # decrease the size
