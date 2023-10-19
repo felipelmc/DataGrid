@@ -1,6 +1,6 @@
 # **DataGrid**
 
-Este é um módulo que implementa a lógica de negócios de um DataGrid utilizando algoritmos aprendidos na disciplina Projeto e Análise de Algoritmos (FGV EMAp).
+Este é um módulo que implementa a lógica de negócios de um DataGrid utilizando algoritmos aprendidos na disciplina Projeto e Análise de Algoritmos (FGV EMAp). O trabalho foi avaliado com nota 9.
 
 ## **Manual de Instruções**
 
